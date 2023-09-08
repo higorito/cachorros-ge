@@ -1,25 +1,9 @@
+import 'package:auau_gerador/src/cubit/dogs_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../data/model/cachorros_model.dart';
-import '../data/repository/cachorro_repo.dart';
-
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  bool carregando = false;
-  var cachorrosModel = CachorrosModel();
-  var cachorroRepo = CachorroRepo();
-
-  // @override
-  // void initState() async {
-  //   super.initState();
-  //   cachorrosModel = await cachorroRepo.getDoguinhos();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +12,6 @@ class _HomePageState extends State<HomePage> {
         drawer: Drawer(
           child: Column(
             children: [
-              UserAccountsDrawerHeader(
-                accountName: const Text("Nome do Usuário"),
-                accountEmail: const Text(""),
-              ),
               ListTile(
                 leading: const Icon(Icons.home),
                 title: const Text("Home"),
@@ -58,52 +38,59 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        body: Column(
-          children: [
-            (cachorrosModel.status == "success")
-                ? Expanded(
-                    flex: 3,
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Image.network(
-                        cachorrosModel.message.toString(),
-                        scale: 1,
-                        fit: BoxFit.fill,
-                      ),
-                    ))
-                : Expanded(
-                    flex: 3,
-                    child: Container(
-                      color: Colors.greenAccent[100],
-                    ),
-                  ),
-            (carregando)
-                ? Container(
+        body: Center(
+          child: Column(
+            children: [
+              const Expanded(flex: 3, child: _Conteudo()),
+              BlocBuilder<DogsCubit, DogsState>(
+                builder: (context, state) {
+                  return Container(
                     width: MediaQuery.of(context).size.width * 0.6,
                     height: 60,
-                    margin: EdgeInsets.all(20),
-                    child: const CircularProgressIndicator())
-                : Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    height: 60,
-                    margin: EdgeInsets.all(20),
-                    child: FloatingActionButton(
-                        onPressed: () async {
-                          setState(() {
-                            carregando = true;
-                          });
-                          cachorrosModel = await cachorroRepo.getDoguinhos();
-                          setState(
-                            () {
-                              carregando = false;
-                            },
-                          );
-                        },
-                        child: Text("CLIQUE PARA GERAR DOGS")),
-                  ),
-          ],
+                    margin: const EdgeInsets.all(20),
+                    child: ElevatedButton(
+                        onPressed: (state.status == DogsStatus.loading)
+                            ? null
+                            : () {
+                                context.read<DogsCubit>().getDog();
+                              },
+                        child: const Text("Gerar Cachorro")),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+}
+
+class _Conteudo extends StatelessWidget {
+  const _Conteudo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final status = context.select((DogsCubit cubit) => cubit.state.status);
+
+    switch (status) {
+      case DogsStatus.initial:
+        return const SizedBox();
+      case DogsStatus.loading:
+        return const Center(
+            child: CircularProgressIndicator.adaptive(
+          backgroundColor: Colors.amber,
+        ));
+      case DogsStatus.failure:
+        return const Center(child: Text('Falha ao buscar cachorros'));
+      case DogsStatus.success:
+        final fotos = context.select((DogsCubit cubit) => cubit.state.message);
+        return Container(
+          child: Image.network(
+            fotos.toString(),
+            fit: BoxFit.fill,
+          ),
+        );
+    }
   }
 }

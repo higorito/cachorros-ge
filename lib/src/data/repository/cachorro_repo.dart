@@ -8,7 +8,11 @@ class CachorroRepo {
 
     var resposta = await dio.get("https://dog.ceo/api/breeds/image/random");
 
-    var cachorrosModel = CachorrosModel.fromJson(resposta.data);
-    return cachorrosModel;
+    if (resposta.statusCode == 200) {
+      var cachorrosModel = CachorrosModel.fromJson(resposta.data);
+      return cachorrosModel;
+    } else {
+      throw Exception();
+    }
   }
 }
