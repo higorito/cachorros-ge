@@ -15,6 +15,4 @@ class CachorrosModel {
     data['status'] = this.status;
     return data;
   }
-
-  getDog() {}
 }

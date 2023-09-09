@@ -1,6 +1,6 @@
 part of 'dogs_cubit.dart';
 
-enum DogsStatus { initial, loading, success, failure }
+enum DogsStatus { initial, loading, success, failure, favoritado }
 
 class DogsState extends Equatable {
   const DogsState({

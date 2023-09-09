@@ -16,11 +16,40 @@ class DogsCubit extends Cubit<DogsState> {
     emit(state.copyWith(status: DogsStatus.loading));
 
     try {
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(milliseconds: 1200));
 
       final cachorros = await cachorroRepo.getDoguinhos();
       emit(state.copyWith(
           status: DogsStatus.success, message: cachorros.message));
+    } catch (e) {
+      emit(state.copyWith(status: DogsStatus.failure));
+    }
+  }
+
+  Future<void> favoritar(String foto) async {
+    emit(state.copyWith(status: DogsStatus.loading));
+
+    try {
+      await Future.delayed(const Duration(milliseconds: 1200));
+
+      await cachorroRepo.favoritar(foto);
+      emit(state.copyWith(
+        status: DogsStatus.favoritado,
+      ));
+    } catch (e) {
+      emit(state.copyWith(status: DogsStatus.failure));
+    }
+  }
+
+  Future<void> getFavoritos() async {
+    emit(state.copyWith(status: DogsStatus.loading));
+
+    try {
+      await Future.delayed(const Duration(milliseconds: 1200));
+
+      String foto = await cachorroRepo.getFavoritos();
+
+      emit(state.copyWith(status: DogsStatus.success, message: foto));
     } catch (e) {
       emit(state.copyWith(status: DogsStatus.failure));
     }
