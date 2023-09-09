@@ -1,5 +1,5 @@
 import 'package:auau_gerador/src/data/model/cachorros_model.dart';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../data/repository/cachorro_repo.dart';

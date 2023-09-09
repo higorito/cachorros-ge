@@ -17,10 +17,17 @@ class App extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.blue,
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green)),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.green,
+            ),
+          ),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.green,
+          )),
       home: BlocProvider(
         create: (context) => DogsCubit(cachorros: cachorros)..getDog(),
-        child: HomePage(),
+        child: const HomePage(),
       ),
     );
   }

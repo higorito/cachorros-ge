@@ -26,7 +26,9 @@ class HomePage extends StatelessWidget {
               ListTile(
                 leading: const Icon(Icons.home),
                 title: const Text("Home"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.favorite),
@@ -75,12 +77,18 @@ class HomePage extends StatelessWidget {
               BlocBuilder<DogsCubit, DogsState>(
                 builder: (context, state) {
                   return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width * 0.6,
                         height: 60,
                         margin: const EdgeInsets.all(20),
                         child: ElevatedButton(
+                            // style: ButtonStyle(
+                            //   backgroundColor:
+                            //       MaterialStateProperty.all(Colors.green),
+                            //   elevation: MaterialStateProperty.all(10),
+                            // ),
                             onPressed: (state.status == DogsStatus.loading)
                                 ? null
                                 : () {
@@ -88,7 +96,8 @@ class HomePage extends StatelessWidget {
                                   },
                             child: const Text(
                               "Gerar Cachorro",
-                              style: TextStyle(fontSize: 22),
+                              style:
+                                  TextStyle(fontSize: 22, color: Colors.black),
                             )),
                       ),
                       Container(
@@ -96,13 +105,17 @@ class HomePage extends StatelessWidget {
                         height: 60,
                         margin: const EdgeInsets.all(20),
                         child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.blueAccent),
+                          ),
                           onPressed: () async {
                             await launchUrl(
                                 Uri.parse(state.message.toString()));
                           },
                           child: const Icon(
                             Icons.share,
-                            color: Colors.blue,
+                            color: Colors.black,
                           ),
                         ),
                       ),
@@ -119,7 +132,7 @@ class HomePage extends StatelessWidget {
 }
 
 class _Conteudo extends StatelessWidget {
-  const _Conteudo({super.key});
+  const _Conteudo();
 
   @override
   Widget build(BuildContext context) {
@@ -144,12 +157,10 @@ class _Conteudo extends StatelessWidget {
         ));
       case DogsStatus.success:
         final fotos = context.select((DogsCubit cubit) => cubit.state.message);
-        return Container(
-          child: Image.network(
-            fotos.toString(),
-            fit: BoxFit.fill,
-            scale: 1,
-          ),
+        return Image.network(
+          fotos.toString(),
+          fit: BoxFit.contain,
+          scale: 1,
         );
     }
   }

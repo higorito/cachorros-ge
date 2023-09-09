@@ -12,7 +12,7 @@ class FavoritosPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Favoritos'),
+        title: const Text('Favoritos'),
       ),
       body: Center(
         child: Column(
@@ -27,7 +27,7 @@ class FavoritosPage extends StatelessWidget {
                       // Chame a função getFavoritos aqui
                       dogsCubit.getFavoritos();
                     },
-                    child: Text('Buscar Favoritos'),
+                    child: const Text('Buscar Favoritos'),
                   ),
                   Container(
                     // width: MediaQuery.of(context).size.width * 0.2,
@@ -47,14 +47,14 @@ class FavoritosPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Expanded(
               flex: 8,
               child: BlocBuilder<DogsCubit, DogsState>(
                 builder: (context, state) {
                   if (state.status == DogsStatus.loading) {
-                    return Dialog(
-                      child: Container(
+                    return const Dialog(
+                      child: SizedBox(
                         height: 100,
                         width: 100,
                         child: Center(
@@ -70,9 +70,9 @@ class FavoritosPage extends StatelessWidget {
                       scale: 1,
                     );
                   } else if (state.status == DogsStatus.failure) {
-                    return Text('Falha ao buscar favoritos');
+                    return const Text('Falha ao buscar favoritos');
                   } else {
-                    return Text('Nenhum favorito encontrado');
+                    return const Text('Nenhum favorito encontrado');
                   }
                 },
               ),
